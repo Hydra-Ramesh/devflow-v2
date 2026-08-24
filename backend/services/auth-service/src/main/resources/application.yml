@@ -1,0 +1,49 @@
+server:
+    port: 5001
+
+spring:
+    application:
+        name: auth-service
+
+    datasource:
+        url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
+        username: ${DB_USER:postgres}
+        password: ${DB_PASSWORD:postgres}
+        driver-class-name: org.postgresql.Driver
+        hikari:
+            maximum-pool-size: 10
+            minimum-idle: 2
+            idle-timeout: 600000
+            max-lifetime: 600000
+            connection-timeout: 30000
+
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        properties:
+            hibernate:
+                format_sql: true
+
+    data:
+        redis:
+            host: ${REDIS_HOST:localhost}
+            port: ${REDIS_PORT:6379}
+
+    kafka:
+        bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
+    jwt:
+        secret: ${JWT_SECRET:supersecretkeythatisverylongandsecurebecausejwtneedsit}
+        expiration: 604800000
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health, prometheus
+    endpoint:
+        health:
+            show-details: always
