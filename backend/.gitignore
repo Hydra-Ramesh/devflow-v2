@@ -1,0 +1,42 @@
+### Maven / Java ###
+target/
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+replay_pid*
+
+### Maven wrapper ###
+!.mvn/wrapper/maven-wrapper.jar
+
+### IDEs ###
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.vscode/
+
+### OS files ###
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+### Logs and temporary files ###
+*.log
+*.tmp
+*.temp
+
+### Local configuration and secrets ###
+.env
+.env.*
+!.env.example
+application-local.yml
+application-local.yaml
+application-local.properties
+
+### Docker local overrides ###
+docker-compose.override.yml

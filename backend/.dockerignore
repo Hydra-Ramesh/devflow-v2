@@ -1,0 +1,39 @@
+.git
+.gitignore
+
+### Build output and dependencies ###
+**/target/
+**/node_modules/
+**/*.class
+**/*.jar
+**/*.war
+
+### IDE and editor files ###
+.idea/
+.vscode/
+**/*.iml
+**/.classpath
+**/.project
+**/.settings/
+
+### OS files ###
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+### Logs and temporary files ###
+**/*.log
+**/*.tmp
+**/*.temp
+
+### Local configuration and secrets ###
+.env
+.env.*
+!.env.example
+**/application-local.yml
+**/application-local.yaml
+**/application-local.properties
+
+### Local infrastructure data ###
+**/data/
+**/logs/
