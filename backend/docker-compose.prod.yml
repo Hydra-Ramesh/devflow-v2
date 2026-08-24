@@ -1,0 +1,88 @@
+x-service-common: &service-common
+  build:
+    context: .
+    dockerfile: Dockerfile
+  restart: unless-stopped
+  env_file:
+    - path: .env
+      required: false
+  networks:
+    - devflow-net
+  depends_on:
+    - kafka
+    - redis
+    - mongodb
+    - postgres
+
+services:
+  # Infrastructure
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - devflow-net
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - devflow-net
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgres}
+      POSTGRES_USER: ${DB_USER:-postgres}
+    networks:
+      - devflow-net
+
+  mongodb:
+    image: mongo:6
+    networks:
+      - devflow-net
+
+  redis:
+    image: redis:7-alpine
+    networks:
+      - devflow-net
+
+  qdrant:
+    image: qdrant/qdrant:v1.7.0
+    networks:
+      - devflow-net
+
+
+  auth-service:
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BROKERS: kafka:29092
+    build:
+      context: ./services/auth-service
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    networks:
+      - devflow-net
+    depends_on:
+      - kafka
+      - redis
+      - postgres
+
+networks:
+  devflow-net:
+    driver: bridge
