@@ -6,6 +6,8 @@ app:
         url: ${FRONTEND_URL:http://localhost:5173}
 
 spring:
+    config:
+        import: optional:file:.env[.properties]
     application:
         name: auth-service
 
