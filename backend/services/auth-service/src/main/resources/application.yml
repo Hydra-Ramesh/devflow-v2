@@ -1,6 +1,10 @@
 server:
     port: 5001
 
+app:
+    frontend:
+        url: ${FRONTEND_URL:http://localhost:5173}
+
 spring:
     application:
         name: auth-service
@@ -24,6 +28,20 @@ spring:
         properties:
             hibernate:
                 format_sql: true
+
+    security:
+        oauth2:
+            client:
+                registration:
+                    google:
+                        client-id: ${GOOGLE_CLIENT_ID:placeholder-google-id}
+                        client-secret: ${GOOGLE_CLIENT_SECRET:placeholder-google-secret}
+                        scope: profile, email
+                    github:
+                        client-id: ${GITHUB_CLIENT_ID:placeholder-github-id}
+                        client-secret: ${GITHUB_CLIENT_SECRET:placeholder-github-secret}
+                        scope: user:email, read:user
+
 
     data:
         redis:
