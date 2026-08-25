@@ -96,6 +96,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .sameSite("Lax")
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
-        getRedirectStrategy().sendRedirect(request, response, frontendUrl + "/oauth/callback");
+        getRedirectStrategy().sendRedirect(request, response, frontendUrl + "/auth/callback");
     }
 }
