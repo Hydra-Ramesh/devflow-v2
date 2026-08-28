@@ -1,20 +1,22 @@
 server:
-    port: 5001
+    port: ${SERVER_PORT}
 
 app:
     frontend:
-        url: ${FRONTEND_URL:http://localhost:5173}
+        url: ${FRONTEND_URL}
 
 spring:
     config:
-        import: optional:file:.env[.properties]
+        import:
+            - optional:file:.env[.properties]
+            - optional:file:backend/services/auth-service/.env[.properties]
     application:
         name: auth-service
 
     datasource:
-        url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/postgres}
-        username: ${DB_USER:postgres}
-        password: ${DB_PASSWORD:postgres}
+        url: ${DATABASE_URL}
+        username: ${DB_USER}
+        password: ${DB_PASSWORD}
         driver-class-name: org.postgresql.Driver
         hikari:
             maximum-pool-size: 10
@@ -36,28 +38,28 @@ spring:
             client:
                 registration:
                     google:
-                        client-id: ${GOOGLE_CLIENT_ID:placeholder-google-id}
-                        client-secret: ${GOOGLE_CLIENT_SECRET:placeholder-google-secret}
+                        client-id: ${GOOGLE_CLIENT_ID}
+                        client-secret: ${GOOGLE_CLIENT_SECRET}
                         scope: profile, email
                     github:
-                        client-id: ${GITHUB_CLIENT_ID:placeholder-github-id}
-                        client-secret: ${GITHUB_CLIENT_SECRET:placeholder-github-secret}
+                        client-id: ${GITHUB_CLIENT_ID}
+                        client-secret: ${GITHUB_CLIENT_SECRET}
                         scope: user:email, read:user
 
 
     data:
         redis:
-            host: ${REDIS_HOST:localhost}
-            port: ${REDIS_PORT:6379}
+            host: ${REDIS_HOST}
+            port: ${REDIS_PORT}
 
     kafka:
-        bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
+        bootstrap-servers: ${KAFKA_BROKERS}
         producer:
             key-serializer: org.apache.kafka.common.serialization.StringSerializer
             value-serializer: org.springframework.kafka.support.serializer.JacksonJsonSerializer
     jwt:
-        secret: ${JWT_SECRET:supersecretkeythatisverylongandsecurebecausejwtneedsit}
-        expiration: 604800000
+        secret: ${JWT_SECRET}
+        expiration: ${JWT_EXPIRATION}
 
 management:
     endpoints:

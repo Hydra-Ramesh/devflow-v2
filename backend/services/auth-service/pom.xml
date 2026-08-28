@@ -13,7 +13,7 @@
 	<version>1.0.0</version>
 	<name>auth-service</name>
 	<description>DevFlow Enterprise Java Spring Boot Auth Service</description>
-	<url/>
+	<url>https://github.com/Hydra-Ramesh/devflow-v2/backend/services/auth-service</url>
 
 	<properties>
 		<java.version>25</java.version>
