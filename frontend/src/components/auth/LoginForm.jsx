@@ -5,6 +5,9 @@ import { Loader2 } from 'lucide-react';
 import useAuthStore from '../../store/useAuthStore';
 import { motion } from 'framer-motion';
 
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const OAUTH_URL = API_URL.replace(/\/api\/?$/, '');
+
 export default function LoginForm() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [loading, setLoading] = useState(false);
@@ -109,7 +112,7 @@ export default function LoginForm() {
       <div className="grid grid-cols-2 gap-4">
         <button
           type="button"
-          onClick={() => window.location.href = 'http://localhost:5001/oauth2/authorization/google'}
+          onClick={() => window.location.href = `${OAUTH_URL}/oauth2/authorization/google`}
           className="flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors text-sm font-medium text-zinc-700 dark:text-zinc-300 shadow-sm"
         >
           <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
@@ -117,7 +120,7 @@ export default function LoginForm() {
         </button>
         <button
           type="button"
-          onClick={() => window.location.href = 'http://localhost:5001/oauth2/authorization/github'}
+          onClick={() => window.location.href = `${OAUTH_URL}/oauth2/authorization/github`}
           className="flex items-center justify-center gap-2 px-4 py-3 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl hover:bg-zinc-50 dark:hover:bg-zinc-800/50 transition-colors text-sm font-medium text-zinc-700 dark:text-zinc-300 shadow-sm"
         >
           <img src="https://www.svgrepo.com/show/512317/github-142.svg" className="w-5 h-5 dark:invert" alt="GitHub" />
