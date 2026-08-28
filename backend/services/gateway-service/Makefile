@@ -1,17 +1,17 @@
 .PHONY: all build run test clean docker-build docker-run tidy
 
-APP_NAME = gateway-service-v2
-DOCKER_IMAGE = devflow/gateway-service:v2
+APP_NAME = gateway-service
+DOCKER_IMAGE = devflow-v2/gateway-service
 
 all: build
 
 build:
 	@echo "==> Building Gateway binary..."
-	go build -ldflags="-s -w" -o bin/gateway ./cmd/gateway
+	go build -ldflags="-s -w" -o bin/gateway .
 
 run:
 	@echo "==> Starting DevFlow Gateway v2..."
-	go run ./cmd/gateway
+	go run .
 
 tidy:
 	@echo "==> Tidying dependencies..."

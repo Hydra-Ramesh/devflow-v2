@@ -1,4 +1,4 @@
-package gatewayservice
+package main
 
 import (
 	"github.com/Hydra-Ramesh/devflow-v2/backend/services/gateway-service/config"

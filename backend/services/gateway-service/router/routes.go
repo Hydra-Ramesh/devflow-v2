@@ -23,4 +23,8 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 		r.Any(v1Prefix+"/*action", proxy.Handler(target, "/api/v1", "/api"))
 	}
 
+	authTarget := cfg.Services.AuthServiceURL
+	r.Any("/oauth2/*action", proxy.Handler(authTarget, "", ""))
+	r.Any("/login/oauth2/*action", proxy.Handler(authTarget, "", ""))
+
 }

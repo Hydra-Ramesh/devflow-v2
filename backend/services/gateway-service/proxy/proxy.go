@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"log"
+	"net/http"
 	"net/http/httputil"
 	"net/url"
 
@@ -19,6 +20,19 @@ func Handler(targetURLStr string, pathPrefixToStrip string, pathPrefixToPrepend 
 	proxy.FlushInterval = -1
 
 	proxy.Director = NewDirector(target, proxy.Director, pathPrefixToStrip, pathPrefixToPrepend)
+	proxy.ModifyResponse = func(response *http.Response) error {
+		for _, header := range []string{
+			"Access-Control-Allow-Origin",
+			"Access-Control-Allow-Credentials",
+			"Access-Control-Allow-Headers",
+			"Access-Control-Allow-Methods",
+			"Access-Control-Expose-Headers",
+			"Access-Control-Max-Age",
+		} {
+			response.Header.Del(header)
+		}
+		return nil
+	}
 	proxy.ErrorHandler = NewErrorHandler(targetURLStr)
 
 	return func(c *gin.Context) {
