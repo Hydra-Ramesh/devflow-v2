@@ -8,7 +8,9 @@ import (
 
 func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 	routeMap := map[string]string{
-		"/api/auth": cfg.Services.AuthServiceURL,
+		"/api/auth":   cfg.Services.AuthServiceURL,
+		"/api/users":  cfg.Services.UserServiceURL,
+		"/api/talent": cfg.Services.UserServiceURL,
 	}
 
 	for prefix, targetURL := range routeMap {

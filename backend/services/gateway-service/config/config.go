@@ -26,6 +26,7 @@ type RateLimitConfig struct {
 
 type ServicesRoutes struct {
 	AuthServiceURL string
+	UserServiceURL string
 }
 
 func LoadConfig() *Config {
@@ -54,6 +55,7 @@ func LoadConfig() *Config {
 		},
 		Services: ServicesRoutes{
 			AuthServiceURL: getEnv("AUTH_SERVICE_URL", "http://localhost:5001"),
+			UserServiceURL: getEnv("USER_SERVICE_URL", "http://localhost:5002"),
 		},
 	}
 }

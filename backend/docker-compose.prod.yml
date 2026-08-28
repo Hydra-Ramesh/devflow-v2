@@ -54,6 +54,7 @@ services:
       PORT: 5000
       REDIS_URL: redis://redis:6379
       AUTH_SERVICE_URL: http://auth-service:5001
+      USER_SERVICE_URL: http://user-service:5002
     build:
       context: ./services/gateway-service
       dockerfile: Dockerfile

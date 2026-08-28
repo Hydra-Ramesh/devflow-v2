@@ -28,4 +28,10 @@ public interface UserRepository extends JpaRepository<User, String> {
 
     @Query("SELECT u FROM User u WHERE u.isLookingForWork = true ORDER BY u.reputation DESC")
     Page<User> findTalent(Pageable pageable);
+
+    @Query(value = "SELECT * FROM \"User\" u WHERE u.\"isLookingForWork\" = true AND " +
+           "(:skills = '' OR EXISTS (SELECT 1 FROM unnest(u.\"preferredRoles\") role " +
+           "WHERE role ILIKE CONCAT('%', :skills, '%'))) " +
+           "ORDER BY u.reputation DESC", nativeQuery = true)
+    Page<User> findTalentBySkills(@Param("skills") String skills, Pageable pageable);
 }

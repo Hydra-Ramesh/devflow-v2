@@ -228,8 +228,11 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public List<TalentUserResponse> getTalent(String skills, int page, int limit) {
-        Pageable pageable = PageRequest.of(Math.max(0, page - 1), limit);
-        Page<User> talentPage = userRepository.findTalent(pageable);
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), normalizeLimit(limit));
+        String skillQuery = skills == null ? "" : skills.trim();
+        Page<User> talentPage = skillQuery.isEmpty()
+            ? userRepository.findTalent(pageable)
+            : userRepository.findTalentBySkills(skillQuery, pageable);
 
         return talentPage.getContent().stream().map(u -> TalentUserResponse.builder()
                 .id(u.getId())
@@ -301,7 +304,7 @@ public class UserService {
             }
         } catch (JsonProcessingException | DataAccessException ignored) {}
 
-        Pageable pageable = PageRequest.of(Math.max(0, page - 1), limit);
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), normalizeLimit(limit));
         Page<User> userPage = userRepository.findLeaderboard(pageable);
 
         List<LeaderboardUserResponse> leaderboard = userPage.getContent().stream().map(u -> LeaderboardUserResponse.builder()
@@ -325,7 +328,7 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public UserSearchResponse searchUsers(String query, int page, int limit) {
-        Pageable pageable = PageRequest.of(Math.max(0, page - 1), limit);
+        Pageable pageable = PageRequest.of(Math.max(0, page - 1), normalizeLimit(limit));
         Page<User> userPage = userRepository.searchUsers(query, pageable);
 
         List<LeaderboardUserResponse> users = userPage.getContent().stream().map(u -> LeaderboardUserResponse.builder()
@@ -345,5 +348,9 @@ public class UserService {
                 .page(page)
                 .totalPages(userPage.getTotalPages())
                 .build();
+    }
+
+    private int normalizeLimit(int limit) {
+        return Math.min(Math.max(limit, 1), 100);
     }
 }

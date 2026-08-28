@@ -57,16 +57,31 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserProfileWrapper(userId));
     }
 
-    @PutMapping(value = "/profile", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_FORM_URLENCODED_VALUE})
+    @PutMapping(value = "/profile", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Update User Profile", description = "Updates user metadata, avatar, bio, and social links", security = @SecurityRequirement(name = "BearerAuth"))
-    public ResponseEntity<UserProfileWrapper> updateProfile(
+    public ResponseEntity<UserProfileWrapper> updateProfileJson(
             Authentication authentication,
-            @ModelAttribute UpdateProfileRequest formRequest,
-            @RequestBody(required = false) UpdateProfileRequest jsonRequest
+            @Valid @RequestBody UpdateProfileRequest request
     ) {
-        String userId = authentication.getName();
-        UpdateProfileRequest request = jsonRequest != null ? jsonRequest : formRequest;
-        return ResponseEntity.ok(userService.updateProfile(userId, request));
+        return updateProfile(authentication, request);
+    }
+
+    @PutMapping(value = "/profile", consumes = {
+            MediaType.MULTIPART_FORM_DATA_VALUE,
+            MediaType.APPLICATION_FORM_URLENCODED_VALUE
+    })
+    public ResponseEntity<UserProfileWrapper> updateProfileForm(
+            Authentication authentication,
+            @Valid @ModelAttribute UpdateProfileRequest request
+    ) {
+        return updateProfile(authentication, request);
+    }
+
+    private ResponseEntity<UserProfileWrapper> updateProfile(
+            Authentication authentication,
+            UpdateProfileRequest request
+    ) {
+        return ResponseEntity.ok(userService.updateProfile(authentication.getName(), request));
     }
 
     @GetMapping("/leaderboard")
