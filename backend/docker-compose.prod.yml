@@ -88,6 +88,30 @@ services:
       - redis
       - postgres
 
+  user-service:
+    image: devflow-v2/user-service
+    restart: unless-stopped
+    env_file:
+      - path: ./services/user-service/.env
+        required: false
+    environment:
+      SERVER_PORT: 5002
+      DATABASE_URL: jdbc:postgresql://postgres:5432/postgres
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      KAFKA_BROKERS: kafka:29092
+    build:
+      context: ./services/user-service
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    networks:
+      - devflow-net
+    depends_on:
+      - kafka
+      - redis
+      - postgres
+
 networks:
   devflow-net:
     driver: bridge
