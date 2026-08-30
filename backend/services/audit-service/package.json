@@ -1,0 +1,34 @@
+{
+  "name": "audit-service",
+  "version": "1.0.0",
+  "description": "It is Audit Service of Dev Flow",
+  "homepage": "https://github.com/Hydra-Ramesh/devflow-v2/tree/main#readme",
+  "bugs": {
+    "url": "https://github.com/Hydra-Ramesh/devflow-v2/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hydra-Ramesh/devflow-v2.git#main"
+  },
+  "license": "ISC",
+  "author": "Ramesh Das",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.7.0",
+    "helmet": "^8.3.0",
+    "hpp": "^0.2.3",
+    "jsonwebtoken": "^9.0.3",
+    "kafkajs": "^2.2.4",
+    "mongoose": "^9.9.4",
+    "prom-client": "^15.1.3",
+    "winston": "^3.19.0"
+  }
+}
