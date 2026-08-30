@@ -22,7 +22,6 @@ export function requireAdmin(req, res, next) {
       role: decoded.role || 'USER',
     };
 
-    // For audit query endpoints, allow ADMIN or users checking their own logs
     next();
   } catch (err) {
     return res.status(401).json({
