@@ -18,7 +18,7 @@ async function bootstrap() {
   const PORT = parseInt(env.PORT, 10) || 5022;
 
   const server = app.listen(PORT, () => {
-    logger.info(` Audit Service v2 running on port ${PORT}`);
+    logger.info(` Audit Service running on port ${PORT}`);
     logger.info(` Prometheus metrics at http://localhost:${PORT}/metrics`);
     logger.info(` Health check at http://localhost:${PORT}/health`);
   });

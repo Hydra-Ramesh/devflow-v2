@@ -21,7 +21,7 @@ public class HealthController {
     public ResponseEntity<Map<String, String>> health() {
         Map<String, String> response = new HashMap<>();
         response.put("status", "UP");
-        response.put("service", "auth-service-v2");
+        response.put("service", "auth-service");
         response.put("timestamp", new java.util.Date().toString());
         return ResponseEntity.ok(response);
     }

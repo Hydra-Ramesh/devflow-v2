@@ -6,7 +6,7 @@ const router = Router();
 router.get('/', (req, res) => {
   res.json({
     status: 'ok',
-    service: 'realtime-service-v2',
+    service: 'realtime-service',
     timestamp: new Date().toISOString(),
     dependencies: {
       redis: pubClient.status,

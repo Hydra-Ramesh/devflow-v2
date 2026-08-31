@@ -1,5 +1,5 @@
 import { Kafka } from 'kafkajs';
-import { KAFKA_BROKERS } from '../config/env.js';
+import { KAFKA_BROKER as KAFKA_BROKERS } from '../config/env.js';
 import { io } from '../service/server.js';
 
 const kafka = new Kafka({
