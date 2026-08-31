@@ -30,4 +30,7 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 	r.Any("/oauth2/*action", proxy.Handler(authTarget, "", ""))
 	r.Any("/login/oauth2/*action", proxy.Handler(authTarget, "", ""))
 
+	realtimeTarget := cfg.Services.RealtimeServiceURL
+	r.Any("/socket.io/*action", proxy.Handler(realtimeTarget, "", ""))
+
 }

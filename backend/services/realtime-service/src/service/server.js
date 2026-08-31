@@ -1,7 +1,7 @@
 import { Server } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { pubClient, subClient } from '../config/redis.js';
-import { socketAuthMiddleware } from '../middleware/auth.js';
+import { socketAuthMiddleware } from '../middleware/auth.middleware.js';
 import { registerSocketHandlers } from './handler.js';
 
 export let io;
