@@ -2,7 +2,7 @@ import { Server } from 'socket.io';
 import { createAdapter } from '@socket.io/redis-adapter';
 import { pubClient, subClient } from '../config/redis.js';
 import { socketAuthMiddleware } from '../middleware/auth.js';
-import { registerSocketHandlers } from './handlers.js';
+import { registerSocketHandlers } from './handler.js';
 
 export let io;
 
@@ -13,7 +13,7 @@ export const initSocketServer = (httpServer) => {
       methods: ['GET', 'POST']
     }
   });
-  
+
   io.adapter(createAdapter(pubClient, subClient));
   io.use(socketAuthMiddleware);
 
