@@ -1,0 +1,22 @@
+{
+  "name": "realtime-service",
+  "version": "1.0.0",
+  "description": "Realtime service of Devflow",
+  "license": "ISC",
+  "author": "Ramesh Das",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "ioredis": "^6.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "kafkajs": "^2.2.4",
+    "socket-io": "^1.0.0",
+    "socket.io": "^4.8.3"
+  }
+}
