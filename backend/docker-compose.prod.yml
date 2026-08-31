@@ -55,6 +55,7 @@ services:
       REDIS_URL: redis://redis:6379
       AUTH_SERVICE_URL: http://auth-service:5001
       USER_SERVICE_URL: http://user-service:5002
+      AUDIT_SERVICE_URL: http://audit-service:5022
     build:
       context: ./services/gateway-service
       dockerfile: Dockerfile
@@ -65,6 +66,8 @@ services:
     depends_on:
       - redis
       - auth-service
+      - user-service
+      - audit-service
 
   auth-service:
     image: devflow-v2/auth-service
@@ -112,6 +115,28 @@ services:
       - kafka
       - redis
       - postgres
+
+  audit-service:
+    image: devflow-v2/audit-service
+    restart: unless-stopped
+    env_file:
+      - path: ./services/audit-service/.env
+        required: false
+    environment:
+      PORT: 5022
+      MONGO_URI: mongodb://mongodb:27017/audit-service
+      KAFKA_BROKERS: kafka:29092
+      JWT_SECRET: ${JWT_SECRET:-supersecretkeythatisverylongandsecurebecausejwtneedsit}
+    build:
+      context: ./services/audit-service
+      dockerfile: Dockerfile
+    ports:
+      - "5022:5022"
+    networks:
+      - devflow-net
+    depends_on:
+      - kafka
+      - mongodb
 
 networks:
   devflow-net:

@@ -1,4 +1,4 @@
-import { AuditService } from '../service/audit.service.js';
+import { AuditService } from '../services/audit.service.js';
 
 export class AuditController {
   static async getLogs(req, res, next) {

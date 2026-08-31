@@ -5,9 +5,14 @@ import { logger } from '../utils/logger.js';
 import { AuditLog } from '../model/audit_log.model.js';
 import { auditEventsIngestedCounter } from '../metrics/metrics.js';
 
+const brokersList = (env.KAFKA_BROKERS || env.KAFKA_BROKER || 'localhost:9092')
+  .split(',')
+  .map((b) => b.trim())
+  .filter(Boolean);
+
 const kafka = new Kafka({
   clientId: 'audit-service',
-  brokers: env.KAFKA_BROKERS.split(','),
+  brokers: brokersList,
   logLevel: logLevel.ERROR,
   retry: {
     initialRetryTime: 100,
@@ -60,8 +65,13 @@ export async function connectKafka() {
         const payload = parsed.payload || parsed;
         const eventId = parsed.eventId || payload.auditId || crypto.randomUUID();
         const action = payload.action || parsed.eventType || topic.toUpperCase();
-        const service = payload.service || parsed.service || 'devflow-platform';
-        const userId = payload.userId || parsed.userId || payload.authorId || null;
+        const userId =
+          payload.userId ||
+          parsed.userId ||
+          payload.authorId ||
+          payload.id ||
+          message.key?.toString() ||
+          null;
         const correlationId =
           payload.correlationId ||
           parsed.correlationId ||

@@ -11,6 +11,7 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 		"/api/auth":   cfg.Services.AuthServiceURL,
 		"/api/users":  cfg.Services.UserServiceURL,
 		"/api/talent": cfg.Services.UserServiceURL,
+		"/api/audit":  cfg.Services.AuditServiceURL,
 	}
 
 	for prefix, targetURL := range routeMap {

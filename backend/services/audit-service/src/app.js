@@ -5,11 +5,14 @@ import compression from 'compression';
 import hpp from 'hpp';
 import rateLimit from 'express-rate-limit';
 import auditRoutes from './routes/audit.routes.js';
-import { errorHandler } from './middlewares/error.middleware.js';
+import { errorHandler } from './middleware/error.middleware.js';
 import { register } from './metrics/metrics.js';
 
 export function createApp() {
   const app = express();
+
+  // Trust reverse proxy (API Gateway)
+  app.set('trust proxy', 1);
 
   // Security Hardening
   app.use(helmet());
