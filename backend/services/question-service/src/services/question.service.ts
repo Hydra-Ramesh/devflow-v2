@@ -63,10 +63,8 @@ export class QuestionService {
   }
 
   static async getQuestions(query: any) {
-    const parsedPage = parseInt(query.page as string, 10) || 1;
-    const parsedLimit = parseInt(query.limit as string, 10) || 10;
-    const skip = (parsedPage - 1) * parsedLimit;
-    const { filter, tags, q, authorId } = query;
+    const { page, limit, filter, tags, q, authorId } = query;
+    const skip = (page - 1) * limit;
 
     const where: any = {};
     if (q) {
@@ -93,17 +91,17 @@ export class QuestionService {
     }
 
     const [questions, total] = await Promise.all([
-      QuestionRepository.findMany(where, skip, parsedLimit, orderBy),
+      QuestionRepository.findMany(where, skip, limit, orderBy),
       QuestionRepository.count(where),
     ]);
 
     return {
       data: questions,
       meta: {
-        page: parsedPage,
-        limit: parsedLimit,
+        page,
+        limit,
         total,
-        totalPages: Math.ceil(total / parsedLimit),
+        totalPages: Math.ceil(total / limit),
       },
     };
   }

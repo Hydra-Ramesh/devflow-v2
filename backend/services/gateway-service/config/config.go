@@ -30,6 +30,7 @@ type ServicesRoutes struct {
 	AuditServiceURL    string
 	RealtimeServiceURL string
 	QuestionServiceURL string
+	AnswerServiceURL   string
 }
 
 func LoadConfig() *Config {
@@ -62,6 +63,7 @@ func LoadConfig() *Config {
 			AuditServiceURL:    getEnv("AUDIT_SERVICE_URL", "http://localhost:5022"),
 			RealtimeServiceURL: getEnv("REALTIME_SERVICE_URL", "http://localhost:5023"),
 			QuestionServiceURL: getEnv("QUESTION_SERVICE_URL", "http://localhost:5005"),
+			AnswerServiceURL:   getEnv("ANSWER_SERVICE_URL", "http://localhost:5006"),
 		},
 	}
 }

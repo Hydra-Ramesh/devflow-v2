@@ -13,6 +13,7 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 		"/api/talent":    cfg.Services.UserServiceURL,
 		"/api/audit":     cfg.Services.AuditServiceURL,
 		"/api/questions": cfg.Services.QuestionServiceURL,
+		"/api/answers":   cfg.Services.AnswerServiceURL,
 	}
 
 	for prefix, targetURL := range routeMap {

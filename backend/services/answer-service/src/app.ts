@@ -21,7 +21,9 @@ export function createApp(): Express {
     });
   });
 
+  app.use('/api/answers', answerRoutes);
   app.use('/api/v1/answers', answerRoutes);
+  app.use('/', answerRoutes);
 
   app.use((req: Request, res: Response) => {
     res.status(404).json({ success: false, message: 'Route not found' });
