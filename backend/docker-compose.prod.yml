@@ -58,6 +58,7 @@ services:
       AUDIT_SERVICE_URL: http://audit-service:5022
       REALTIME_SERVICE_URL: http://realtime-service:5023
       QUESTION_SERVICE_URL: http://question-service:5005
+      ANSWER_SERVICE_URL: http://answer-service:5006
     build:
       context: ./services/gateway-service
       dockerfile: Dockerfile
@@ -72,6 +73,7 @@ services:
       - audit-service
       - realtime-service
       - question-service
+      - answer-service
 
   auth-service:
     image: devflow-v2/auth-service
@@ -183,6 +185,29 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5005:5005"
+    networks:
+      - devflow-net
+    depends_on:
+      - kafka
+      - postgres
+
+  answer-service:
+    image: devflow-v2/answer-service
+    restart: unless-stopped
+    env_file:
+      - path: ./services/answer-service/.env
+        required: false
+    environment:
+      PORT: 5006
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/answer_db
+      REDIS_URL: redis://redis:6379
+      KAFKA_BROKERS: kafka:29092
+      JWT_SECRET: ${JWT_SECRET:-supersecretkeythatisverylongandsecurebecausejwtneedsit}
+    build:
+      context: ./services/answer-service
+      dockerfile: Dockerfile
+    ports:
+      - "5006:5006"
     networks:
       - devflow-net
     depends_on:
