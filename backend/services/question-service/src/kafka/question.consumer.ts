@@ -8,7 +8,7 @@ export async function startQuestionConsumer(): Promise<void> {
     console.log('Kafka Consumer connected (Question Service)');
 
     await consumer.subscribe({
-      topics: ['vote-cast', 'answer-created', 'answer-accepted'],
+      topics: ['vote-cast', 'answer-created', 'answer-accepted', 'user-registered', 'user-updated'],
       fromBeginning: false,
     });
 
@@ -57,6 +57,20 @@ export async function startQuestionConsumer(): Promise<void> {
               await deleteCache(`question:${questionId}`);
               await deleteCache('questions:feed:*');
             }
+          } else if (topic === 'user-registered') {
+            const { id, email, fullName, avatarUrl } = payload;
+            await prisma.user.upsert({
+              where: { id },
+              update: { email, fullName, avatarUrl },
+              create: { id, email, fullName, avatarUrl },
+            });
+          } else if (topic === 'user-updated') {
+            const { id, email, fullName, avatarUrl, reputation } = payload;
+            await prisma.user.upsert({
+              where: { id },
+              update: { email, fullName, avatarUrl, reputation },
+              create: { id, email, fullName, avatarUrl, reputation },
+            });
           }
         } catch (err) {
           console.error(`Error processing Kafka event [${topic}]:`, err);
