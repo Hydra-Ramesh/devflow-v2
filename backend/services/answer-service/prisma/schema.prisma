@@ -1,0 +1,24 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Answer {
+  id             String    @id @default(uuid())
+  content        String
+  authorId       String    // Reference to User Service
+  questionId     String    // Reference to Question Service
+  isAccepted     Boolean   @default(false)
+  upvotesCount   Int       @default(0)
+  downvotesCount Int       @default(0)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@index([questionId])
+  @@index([authorId])
+  @@index([createdAt])
+}
