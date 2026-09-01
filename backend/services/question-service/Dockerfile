@@ -6,6 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
+RUN apk --no-cache add openssl
 RUN npm ci
 
 COPY . .
@@ -18,7 +19,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-RUN apk --no-cache add curl tzdata
+RUN apk --no-cache add curl tzdata openssl
 
 COPY package*.json ./
 COPY prisma ./prisma/

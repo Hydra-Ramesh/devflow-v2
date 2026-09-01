@@ -80,6 +80,7 @@ export async function connectKafka() {
         const ip = payload.ip || 'N/A';
         const userAgent = payload.userAgent || 'N/A';
         const timestamp = parsed.timestamp ? new Date(parsed.timestamp) : new Date();
+        const service = payload.service || parsed.service || 'unknown';
 
         try {
           const logEntry = new AuditLog({
