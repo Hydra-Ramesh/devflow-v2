@@ -1,4 +1,4 @@
-package voteservice
+package main
 
 import (
 	"log"

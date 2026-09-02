@@ -11,13 +11,16 @@ var RedisClient *redis.Client
 var Ctx = context.Background()
 
 func ConnectRedis() {
-	RedisClient = redis.NewClient(&redis.Options{
-		Addr:     AppConfig.RedisURL,
-		Password: "",
-		DB:       0,
-	})
+	opt, err := redis.ParseURL(AppConfig.RedisURL)
+	if err != nil {
+		// Fallback if parsing fails (e.g. if just host:port is provided)
+		opt = &redis.Options{
+			Addr: AppConfig.RedisURL,
+		}
+	}
+	RedisClient = redis.NewClient(opt)
 
-	_, err := RedisClient.Ping(Ctx).Result()
+	_, err = RedisClient.Ping(Ctx).Result()
 	if err != nil {
 		log.Fatalf("Failed to connect to Redis: %v", err)
 	}

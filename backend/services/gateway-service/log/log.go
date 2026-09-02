@@ -26,7 +26,7 @@ func init() {
 func formatMessage(corrID, msg string) string {
 	ts := time.Now().UTC().Format("2006-01-02 15:04:05")
 	if corrID != "" {
-		return fmt.Sprintf("[%s] [%s] %s", ts, corrID, msg)
+		return fmt.Sprintf("[%s] [Trace: %s] %s", ts, corrID, msg)
 	}
 	return fmt.Sprintf("[%s] %s", ts, msg)
 }

@@ -6,12 +6,15 @@ import (
 )
 
 func FindVote(userId string, entityId string, entityType string) (*models.Vote, error) {
-	var vote models.Vote
-	result := config.DB.Where("user_id = ? AND entity_id = ? AND entity_type = ?", userId, entityId, entityType).First(&vote)
+	var votes []models.Vote
+	result := config.DB.Where("user_id = ? AND entity_id = ? AND entity_type = ?", userId, entityId, entityType).Limit(1).Find(&votes)
 	if result.Error != nil {
 		return nil, result.Error
 	}
-	return &vote, nil
+	if len(votes) == 0 {
+		return nil, nil
+	}
+	return &votes[0], nil
 }
 
 func CreateVote(vote *models.Vote) error {

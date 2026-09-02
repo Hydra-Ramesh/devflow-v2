@@ -73,3 +73,7 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
     operations-sorter: method
+    
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} [Trace: %X{correlationId}] - %msg%n"

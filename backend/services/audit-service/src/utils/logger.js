@@ -1,5 +1,8 @@
 import winston from 'winston';
 import {env} from "../config/env.js";
+import { AsyncLocalStorage } from 'async_hooks';
+
+export const traceStorage = new AsyncLocalStorage();
 
 export const logger = winston.createLogger({
     level: env.LOG_LEVEL,
@@ -13,8 +16,9 @@ export const logger = winston.createLogger({
             format: winston.format.combine(
                 winston.format.colorize(),
                 winston.format.printf(({ level, message, timestamp, service, ...meta }) => {
+                    const traceId = traceStorage.getStore() || 'NO-TRACE';
                     const metaStr= Object.keys(meta).length ? ` ${JSON.stringify(meta)}` : '';
-                    return `${timestamp} [${service}] ${level}: ${message}${metaStr}`;
+                    return `${timestamp} [${service}] [Trace: ${traceId}] ${level}: ${message}${metaStr}`;
                 })
             ),
         }),

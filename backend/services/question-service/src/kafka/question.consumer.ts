@@ -23,7 +23,7 @@ export async function startQuestionConsumer(): Promise<void> {
 
           if (topic === 'vote-cast') {
             const { questionId, value, targetType } = payload;
-            if (questionId && (targetType === 'QUESTION' || !targetType)) {
+            if (questionId && (targetType?.toUpperCase() === 'QUESTION' || !targetType)) {
               if (value > 0) {
                 await prisma.question.update({
                   where: { id: questionId },

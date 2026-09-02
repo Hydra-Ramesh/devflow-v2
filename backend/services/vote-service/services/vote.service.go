@@ -22,6 +22,12 @@ type VoteCastEvent struct {
 	UserVote      int    `json:"userVote"`
 	AmountChanged int    `json:"amountChanged"`
 	VoterID       string `json:"voterId"`
+	// Compatibility fields for question-service, audit-service, and realtime-service
+	QuestionID string `json:"questionId,omitempty"`
+	TargetID   string `json:"targetId"`
+	TargetType string `json:"targetType"`
+	Value      int    `json:"value"`
+	UserID     string `json:"userId"`
 }
 
 func ToggleVote(input ToggleVoteInput, voterId string) (string, error) {
@@ -79,6 +85,11 @@ func ToggleVote(input ToggleVoteInput, voterId string) (string, error) {
 		UserVote:      input.VoteType,
 		AmountChanged: amountChanged,
 		VoterID:       voterId,
+		QuestionID:    input.EntityID, // Assuming entity is question
+		TargetID:      input.EntityID,
+		TargetType:    input.EntityType,
+		Value:         amountChanged,
+		UserID:        voterId,
 	}
 
 	eventKey := fmt.Sprintf("%s:%s", input.EntityType, input.EntityID)
@@ -86,6 +97,9 @@ func ToggleVote(input ToggleVoteInput, voterId string) (string, error) {
 	if err != nil {
 		return "", err
 	}
+
+	// Publish to vote-events for realtime-service
+	config.PublishEvent("vote-events", eventKey, eventPayload)
 
 	return "Vote recorded", nil
 }

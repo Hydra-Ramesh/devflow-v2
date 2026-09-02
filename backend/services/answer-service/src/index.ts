@@ -2,11 +2,13 @@ import { createApp } from "./app.js";
 import { env } from "./config/env.js";
 import prisma from "./config/prisma.js";
 import { connectKafka, disconnectKafka } from "./config/kafka.js";
+import { startAnswerConsumer } from "./kafka/answer.consumer.js";
 
 async function bootstrap() {
-  console.log(" Initializing DevFlow Answer Service (TypeScript)...");
+  console.log("🚀 Initializing DevFlow Answer Service...");
 
   await connectKafka();
+  startAnswerConsumer().catch(err => console.warn('Kafka Consumer init warning:', err));
 
   const app = createApp();
   const PORT = parseInt(env.PORT, 10) || 5006;

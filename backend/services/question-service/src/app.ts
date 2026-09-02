@@ -6,9 +6,19 @@ import hpp from 'hpp';
 import questionRoutes from './routes/question.route.js';
 import { errorHandler } from './middlewares/error.middleware.js';
 import { register } from './metrics/metrics.js';
+import { traceStorage, logger } from './utils/logger.js';
 
 export function createApp(): Express {
   const app = express();
+
+  // Tracing Middleware
+  app.use((req: Request, res: Response, next) => {
+    const correlationId = req.headers['x-correlation-id'] as string || 'system-' + Date.now();
+    traceStorage.run(correlationId, () => {
+      logger.info(`Incoming ${req.method} request to ${req.url}`);
+      next();
+    });
+  });
 
   // Security Hardening
   app.use(helmet({ crossOriginResourcePolicy: false }));

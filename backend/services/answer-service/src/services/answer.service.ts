@@ -18,6 +18,12 @@ export class AnswerService {
       answer,
     });
 
+    await publishEvent("answer-created", data.questionId, {
+      questionId: data.questionId,
+      answerId: answer.id,
+      authorId: data.authorId,
+    });
+
     await publishEvent("embedding-events", answer.id, {
       type: "index-answer",
       payload: answer,
@@ -72,6 +78,13 @@ export class AnswerService {
     });
 
     await redis.del(`answers:question:${answer.questionId}`);
+
+    await publishEvent("answer-accepted", answer.questionId, {
+      questionId: answer.questionId,
+      answerId: answer.id,
+      authorId: answer.authorId,
+    });
+
     if (answer.authorId !== userId) {
       await publishEvent("user-reputation-events", answer.authorId, {
         userId: answer.authorId,

@@ -13,6 +13,7 @@ const kafka = new Kafka({
 });
 
 export const producer: Producer = kafka.producer();
+export const consumer = kafka.consumer({ groupId: 'answer-service-group' });
 let isProducerConnected = false;
 
 export async function connectKafka(): Promise<void> {

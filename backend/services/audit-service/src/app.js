@@ -8,11 +8,22 @@ import auditRoutes from './routes/audit.routes.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { register } from './metrics/metrics.js';
 
+import { traceStorage, logger } from './utils/logger.js';
+
 export function createApp() {
   const app = express();
 
   // Trust reverse proxy (API Gateway)
   app.set('trust proxy', 1);
+
+  // Tracing Middleware
+  app.use((req, res, next) => {
+    const correlationId = req.headers['x-correlation-id'] || 'system-' + Date.now();
+    traceStorage.run(correlationId, () => {
+      logger.info(`Incoming ${req.method} request to ${req.url}`);
+      next();
+    });
+  });
 
   // Security Hardening
   app.use(helmet());
