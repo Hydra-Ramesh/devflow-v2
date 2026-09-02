@@ -12,25 +12,19 @@ import (
 func main() {
 	config.LoadConfig()
 
-	// Connect to Database
 	config.ConnectDB()
 
-	// Auto Migrate the Vote model
 	err := config.DB.AutoMigrate(&models.Vote{})
 	if err != nil {
 		log.Fatalf("Failed to auto-migrate database: %v", err)
 	}
 
-	// Connect to Redis
 	config.ConnectRedis()
 
-	// Connect to Kafka
 	config.ConnectKafka()
 
-	// Initialize Gin Engine
 	router := gin.Default()
 
-	// Setup Routes
 	routes.SetupRoutes(router)
 
 	log.Printf("Starting vote-service-v2 on port %s", config.AppConfig.Port)
