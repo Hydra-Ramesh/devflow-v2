@@ -4,9 +4,8 @@ import { publishEvent } from '../config/kafka.js';
 
 export class QuestionService {
   static async createQuestion(userId: string, data: any) {
-    let slug = slugify.default(data.title, { lower: true, strict: true, trim: true });
-    
-    // Ensure slug uniqueness
+    let slug = slugify(data.title, { lower: true, strict: true, trim: true });
+    // Ensure user exists in local database to satisfy foreign key constraint
     let exists = await QuestionRepository.slugExists(slug);
     let counter = 1;
     let uniqueSlug = slug;
