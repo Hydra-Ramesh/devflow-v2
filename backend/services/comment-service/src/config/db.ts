@@ -4,7 +4,7 @@ import { env } from './env.js';
 export async function connectDB() {
   try {
     await mongoose.connect(env.MONGO_URI);
-    console.log('Connected to MongoDB (Comment Service v2)');
+    console.log('Connected to MongoDB Comment Service');
   } catch (err) {
     console.error('Failed to connect to MongoDB', err);
     process.exit(1);
