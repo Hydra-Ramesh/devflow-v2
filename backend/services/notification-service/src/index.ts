@@ -25,7 +25,6 @@ async function bootstrap() {
 
     // Initialize Socket.io Server
     const io = new Server(server, {
-      path: "/notifications-socket",
       cors: { origin: "*" },
     });
 

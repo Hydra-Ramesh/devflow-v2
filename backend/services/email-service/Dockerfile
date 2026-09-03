@@ -20,7 +20,7 @@ RUN apk --no-cache add ca-certificates tzdata
 
 WORKDIR /app
 
-COPY --from=builder / /app/email
+COPY --from=builder /email /app/email
 RUN chmod +x /app/email
 
 EXPOSE 5018

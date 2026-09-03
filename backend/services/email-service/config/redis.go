@@ -55,3 +55,11 @@ func SaveUserProfile(userID string, email string, fullName string) error {
 	bytes, _ := json.Marshal(profile)
 	return RDB.Set(ctx, "user:profile:"+userID, bytes, 0).Err()
 }
+
+func GetEntityAuthor(entityType string, entityID string) string {
+	val, err := RDB.Get(ctx, "entity:author:"+entityType+":"+entityID).Result()
+	if err != nil {
+		return ""
+	}
+	return val
+}

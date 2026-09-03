@@ -293,6 +293,28 @@ services:
       - redis
       - postgres
 
+  email-service:
+    image: devflow-v2/email-service
+    restart: unless-stopped
+    env_file:
+      - path: ./services/email-service/.env
+        required: false
+    environment:
+      PORT: 5024
+      REDIS_URL: redis://redis:6379
+      KAFKA_BROKERS: kafka:29092
+    build:
+      context: ./services/email-service
+      dockerfile: Dockerfile
+    ports:
+      - "5024:5024"
+    networks:
+      - devflow-net
+    depends_on:
+      - kafka
+      - redis
+
 networks:
   devflow-net:
     driver: bridge
+

@@ -10,7 +10,21 @@ import (
 	"github.com/Hydra-Ramesh/devflow-v2/backend/services/email-service/config"
 	"github.com/Hydra-Ramesh/devflow-v2/backend/services/email-service/mail"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promauto"
 	"github.com/segmentio/kafka-go"
+)
+
+var (
+	eventsConsumed = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "devflow_email_events_consumed_total",
+		Help: "Total number of kafka events consumed by email-service",
+	}, []string{"topic"})
+
+	emailsSent = promauto.NewCounterVec(prometheus.CounterOpts{
+		Name: "devflow_emails_sent_total",
+		Help: "Total number of emails attempted to be sent",
+	}, []string{"type"})
 )
 
 var consumers []*kafka.Reader
@@ -28,57 +42,90 @@ func StartConsumers() {
 	brokerList := strings.Split(brokers, ",")
 	m := mail.NewMailer()
 
-	go startListener(brokerList, "email-events", "email-service-group", func(msg []byte) {
-		var event EventWrapper
-		if err := json.Unmarshal(msg, &event); err != nil {
-			json.Unmarshal(msg, &event.Payload)
+	go startListener(brokerList, "email-password-reset", "email-service-group", func(msg []byte) {
+		var wrapper map[string]interface{}
+		json.Unmarshal(msg, &wrapper)
+
+		payload, ok := wrapper["payload"].(map[string]interface{})
+		if !ok {
+			payload = wrapper // fallback if not wrapped
 		}
 
-		payload := event.Payload
-		if payload == nil {
-			json.Unmarshal(msg, &payload)
+		email := getString(payload, "email")
+		if email != "" {
+			m.SendPasswordReset(email, getString(payload, "resetLink"))
+		}
+	})
+
+	go startListener(brokerList, "email-new-login", "email-service-group", func(msg []byte) {
+		var wrapper map[string]interface{}
+		json.Unmarshal(msg, &wrapper)
+
+		payload, ok := wrapper["payload"].(map[string]interface{})
+		if !ok {
+			payload = wrapper
+		}
+
+		m.SendNewLogin(
+			getString(payload, "email"), getString(payload, "name"),
+			getString(payload, "device"), getString(payload, "os"),
+			getString(payload, "browser"), getString(payload, "ip"),
+			getString(payload, "time"),
+		)
+	})
+
+	go startListener(brokerList, "email-welcome", "email-service-group", func(msg []byte) {
+		var wrapper map[string]interface{}
+		json.Unmarshal(msg, &wrapper)
+
+		payload, ok := wrapper["payload"].(map[string]interface{})
+		if !ok {
+			payload = wrapper
 		}
 
 		email := getString(payload, "email")
 		name := getString(payload, "name")
-
-		switch event.Type {
-		case "password-reset":
-			m.SendPasswordReset(email, getString(payload, "resetLink"))
-		case "new-login":
-			m.SendNewLogin(
-				email, name,
-				getString(payload, "device"),
-				getString(payload, "os"),
-				getString(payload, "browser"),
-				getString(payload, "ip"),
-				getString(payload, "time"),
-			)
-		case "welcome":
+		if email != "" {
 			m.SendWelcome(email, name)
-		case "achievement":
-			m.SendAchievement(email, name, getInt(payload, "reputation"))
+			emailsSent.WithLabelValues("welcome").Inc()
 		}
 	})
 
 	go startListener(brokerList, "answer-created", "email-service-group", func(msg []byte) {
-		var payload map[string]interface{}
-		json.Unmarshal(msg, &payload)
+		var wrapper map[string]interface{}
+		json.Unmarshal(msg, &wrapper)
 
-		recipientID := getString(payload, "questionAuthorId")
+		payload, ok := wrapper["payload"].(map[string]interface{})
+		if !ok {
+			payload = wrapper
+		}
+
+		questionID := getString(payload, "questionId")
 		authorID := getString(payload, "authorId")
+
+		// Lookup questionAuthorId from Redis
+		recipientID := getString(payload, "questionAuthorId")
+		if recipientID == "" && questionID != "" {
+			recipientID = config.GetEntityAuthor("question", questionID)
+		}
 
 		if recipientID != "" && recipientID != authorID {
 			profile, err := config.GetUserProfile(recipientID)
 			if err == nil && profile.Email != "" {
 				m.SendAnswerNotification(profile.Email, profile.FullName, getString(payload, "questionTitle"), getString(payload, "link"))
+				emailsSent.WithLabelValues("answer_notification").Inc()
 			}
 		}
 	})
 
-	go startListener(brokerList, "user-created", "email-service-group", func(msg []byte) {
-		var payload map[string]interface{}
-		json.Unmarshal(msg, &payload)
+	go startListener(brokerList, "user-registered", "email-service-group", func(msg []byte) {
+		var wrapper map[string]interface{}
+		json.Unmarshal(msg, &wrapper)
+
+		payload, ok := wrapper["payload"].(map[string]interface{})
+		if !ok {
+			payload = wrapper
+		}
 
 		userID := getString(payload, "id")
 		email := getString(payload, "email")
@@ -86,7 +133,6 @@ func StartConsumers() {
 
 		if userID != "" && email != "" {
 			config.SaveUserProfile(userID, email, fullName)
-			m.SendWelcome(email, fullName)
 		}
 	})
 
@@ -119,6 +165,7 @@ func startListener(brokers []string, topic, groupID string, handler func([]byte)
 		if err != nil {
 			break
 		}
+		eventsConsumed.WithLabelValues(topic).Inc()
 		handler(m.Value)
 	}
 }
