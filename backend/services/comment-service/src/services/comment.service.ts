@@ -33,6 +33,19 @@ export class CommentService {
 
     const comment = await CommentModel.create(payload);
 
+    await publishEvent("comment-events", comment._id.toString(), {
+      targetType: data.entityType.toLowerCase(),
+      targetId: data.entityId,
+      comment: {
+        id: comment._id.toString(),
+        authorId: data.authorId,
+        entityType: data.entityType.toLowerCase(),
+        entityId: data.entityId,
+        content: data.content,
+        parentId: data.parentId,
+      }
+    });
+
     await publishEvent("comment-created", comment._id.toString(), {
       commentId: comment._id.toString(),
       authorId: data.authorId,
