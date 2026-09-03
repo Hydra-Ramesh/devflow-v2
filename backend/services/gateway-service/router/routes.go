@@ -8,14 +8,15 @@ import (
 
 func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 	routeMap := map[string]string{
-		"/api/auth":      cfg.Services.AuthServiceURL,
-		"/api/users":     cfg.Services.UserServiceURL,
-		"/api/talent":    cfg.Services.UserServiceURL,
-		"/api/audit":     cfg.Services.AuditServiceURL,
-		"/api/questions": cfg.Services.QuestionServiceURL,
-		"/api/answers":   cfg.Services.AnswerServiceURL,
-		"/api/votes":     cfg.Services.VoteServiceURL,
-		"/api/comments":  cfg.Services.CommentServiceURL,
+		"/api/auth":          cfg.Services.AuthServiceURL,
+		"/api/users":         cfg.Services.UserServiceURL,
+		"/api/talent":        cfg.Services.UserServiceURL,
+		"/api/audit":         cfg.Services.AuditServiceURL,
+		"/api/questions":     cfg.Services.QuestionServiceURL,
+		"/api/answers":       cfg.Services.AnswerServiceURL,
+		"/api/votes":         cfg.Services.VoteServiceURL,
+		"/api/comments":      cfg.Services.CommentServiceURL,
+		"/api/notifications": cfg.Services.NotificationServiceURL,
 	}
 
 	for prefix, targetURL := range routeMap {
@@ -33,6 +34,10 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 	authTarget := cfg.Services.AuthServiceURL
 	r.Any("/oauth2/*action", proxy.Handler(authTarget, "", ""))
 	r.Any("/login/oauth2/*action", proxy.Handler(authTarget, "", ""))
+
+	notificationTarget := cfg.Services.NotificationServiceURL
+	r.Any("/socket.io/notifications", proxy.Handler(notificationTarget, "", ""))
+	r.Any("/socket.io/notifications/*action", proxy.Handler(notificationTarget, "", ""))
 
 	realtimeTarget := cfg.Services.RealtimeServiceURL
 	r.Any("/socket.io/*action", proxy.Handler(realtimeTarget, "", ""))

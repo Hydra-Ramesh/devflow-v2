@@ -61,6 +61,7 @@ services:
       ANSWER_SERVICE_URL: http://answer-service:5006
       VOTE_SERVICE_URL: http://vote-service:5007
       COMMENT_SERVICE_URL: http://comment-service:5003
+      NOTIFICATION_SERVICE_URL: http://notification-service:5004
     build:
       context: ./services/gateway-service
       dockerfile: Dockerfile
@@ -78,6 +79,7 @@ services:
       - answer-service
       - vote-service
       - comment-service
+      - notification-service
 
   auth-service:
     image: devflow-v2/auth-service
@@ -266,6 +268,30 @@ services:
       - kafka
       - redis
       - mongodb
+
+  notification-service:
+    image: devflow-v2/notification-service
+    restart: unless-stopped
+    env_file:
+      - path: ./services/notification-service/.env
+        required: false
+    environment:
+      PORT: 5004
+      DATABASE_URL: postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/notification_db
+      REDIS_URL: redis://redis:6379
+      KAFKA_BROKERS: kafka:29092
+      JWT_SECRET: ${JWT_SECRET:-supersecretkeythatisverylongandsecurebecausejwtneedsit}
+    build:
+      context: ./services/notification-service
+      dockerfile: Dockerfile
+    ports:
+      - "5004:5004"
+    networks:
+      - devflow-net
+    depends_on:
+      - kafka
+      - redis
+      - postgres
 
 networks:
   devflow-net:

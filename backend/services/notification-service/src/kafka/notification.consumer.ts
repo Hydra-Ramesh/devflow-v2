@@ -21,6 +21,7 @@ export async function startNotificationConsumer(
         "answer-accepted",
         "answer-created",
         "comment-created",
+        "question-created",
       ],
       fromBeginning: false,
     });
@@ -71,31 +72,42 @@ export async function startNotificationConsumer(
                 entityId: entityId,
               };
             }
+          } else if (topic === "question-created") {
+            const { id, authorId } = payload;
+            if (id && authorId) {
+              await redis.set(`entity:author:question:${id}`, authorId);
+            }
           } else if (topic === "answer-created") {
-            if (
-              payload.questionAuthorId &&
-              payload.authorId &&
-              payload.questionAuthorId !== payload.authorId
-            ) {
-              notificationData = {
-                recipientId: payload.questionAuthorId,
-                actorId: payload.authorId,
-                type: "ANSWER",
-                entityId: payload.questionId || payload.entityId,
-              };
+            const { answerId, authorId, questionId } = payload;
+            if (answerId && authorId) {
+              await redis.set(`entity:author:answer:${answerId}`, authorId);
+            }
+            
+            // Generate notification for question author
+            if (questionId && authorId) {
+              const qAuthorId = await redis.get(`entity:author:question:${questionId}`);
+              if (qAuthorId && qAuthorId !== authorId) {
+                notificationData = {
+                  recipientId: qAuthorId,
+                  actorId: authorId,
+                  type: "ANSWER",
+                  entityId: questionId,
+                };
+              }
             }
           } else if (topic === "comment-created") {
-            if (
-              payload.targetAuthorId &&
-              payload.authorId &&
-              payload.targetAuthorId !== payload.authorId
-            ) {
-              notificationData = {
-                recipientId: payload.targetAuthorId,
-                actorId: payload.authorId,
-                type: "COMMENT",
-                entityId: payload.targetId || payload.entityId,
-              };
+            // comment-service emits: commentId, authorId, entityType, entityId
+            const { entityId, entityType, authorId } = payload;
+            if (entityId && entityType && authorId) {
+              const targetAuthorId = await redis.get(`entity:author:${entityType}:${entityId}`);
+              if (targetAuthorId && targetAuthorId !== authorId) {
+                notificationData = {
+                  recipientId: targetAuthorId,
+                  actorId: authorId,
+                  type: "COMMENT",
+                  entityId: entityId,
+                };
+              }
             }
           }
 

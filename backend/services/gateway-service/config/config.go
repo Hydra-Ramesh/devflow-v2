@@ -25,14 +25,15 @@ type RateLimitConfig struct {
 }
 
 type ServicesRoutes struct {
-	AuthServiceURL     string
-	UserServiceURL     string
-	AuditServiceURL    string
-	RealtimeServiceURL string
-	QuestionServiceURL string
-	AnswerServiceURL   string
-	VoteServiceURL     string
-	CommentServiceURL  string
+	AuthServiceURL         string
+	UserServiceURL         string
+	AuditServiceURL        string
+	RealtimeServiceURL     string
+	QuestionServiceURL     string
+	AnswerServiceURL       string
+	VoteServiceURL         string
+	CommentServiceURL      string
+	NotificationServiceURL string
 }
 
 func LoadConfig() *Config {
@@ -60,14 +61,15 @@ func LoadConfig() *Config {
 			WindowSec: rateLimitWindowSec,
 		},
 		Services: ServicesRoutes{
-			AuthServiceURL:     getEnv("AUTH_SERVICE_URL", "http://localhost:5001"),
-			UserServiceURL:     getEnv("USER_SERVICE_URL", "http://localhost:5002"),
-			AuditServiceURL:    getEnv("AUDIT_SERVICE_URL", "http://localhost:5022"),
-			RealtimeServiceURL: getEnv("REALTIME_SERVICE_URL", "http://localhost:5023"),
-			QuestionServiceURL: getEnv("QUESTION_SERVICE_URL", "http://localhost:5005"),
-			AnswerServiceURL:   getEnv("ANSWER_SERVICE_URL", "http://localhost:5006"),
-			VoteServiceURL:     getEnv("VOTE_SERVICE_URL", "http://localhost:5007"),
-			CommentServiceURL:  getEnv("COMMENT_SERVICE_URL", "http://localhost:5003"),
+			AuthServiceURL:         getEnv("AUTH_SERVICE_URL", "http://localhost:5001"),
+			UserServiceURL:         getEnv("USER_SERVICE_URL", "http://localhost:5002"),
+			AuditServiceURL:        getEnv("AUDIT_SERVICE_URL", "http://localhost:5022"),
+			RealtimeServiceURL:     getEnv("REALTIME_SERVICE_URL", "http://localhost:5023"),
+			QuestionServiceURL:     getEnv("QUESTION_SERVICE_URL", "http://localhost:5005"),
+			AnswerServiceURL:       getEnv("ANSWER_SERVICE_URL", "http://localhost:5006"),
+			VoteServiceURL:         getEnv("VOTE_SERVICE_URL", "http://localhost:5007"),
+			CommentServiceURL:      getEnv("COMMENT_SERVICE_URL", "http://localhost:5003"),
+			NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", "http://localhost:5004"),
 		},
 	}
 }

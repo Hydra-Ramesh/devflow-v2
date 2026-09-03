@@ -33,4 +33,4 @@ EXPOSE 5004
 
 ENV NODE_ENV=production
 
-CMD ["node", "dist/index.js"]
+CMD ["npm", "start"]
