@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Notification {
+  id          String   @id @default(uuid())
+  recipientId String   @map("recipient_id")
+  actorId     String   @map("actor_id")
+  type        String   // 'ANSWER', 'COMMENT', 'UPVOTE', 'DOWNVOTE', 'ACCEPT'
+  entityId    String   @map("entity_id")
+  isRead      Boolean  @default(false) @map("is_read")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([recipientId])
+  @@index([createdAt])
+  @@map("notifications")
+}
