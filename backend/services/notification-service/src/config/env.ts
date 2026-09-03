@@ -14,7 +14,7 @@ const envSchema = z.object({
 const parsed = envSchema.safeParse(process.env);
 
 if (!parsed.success) {
-  console.error('Invalid environment variables in notification-service-v2:', parsed.error.format());
+  console.error('Invalid environment variables in notification-service:', parsed.error.format());
   process.exit(1);
 }
 
