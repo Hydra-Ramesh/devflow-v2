@@ -1,0 +1,29 @@
+# Go build output
+bin/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+coverage.out
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.sample
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# IDE files
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
