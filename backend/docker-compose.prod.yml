@@ -60,6 +60,7 @@ services:
       QUESTION_SERVICE_URL: http://question-service:5005
       ANSWER_SERVICE_URL: http://answer-service:5006
       VOTE_SERVICE_URL: http://vote-service:5007
+      COMMENT_SERVICE_URL: http://comment-service:5003
     build:
       context: ./services/gateway-service
       dockerfile: Dockerfile
@@ -76,6 +77,7 @@ services:
       - question-service
       - answer-service
       - vote-service
+      - comment-service
 
   auth-service:
     image: devflow-v2/auth-service
@@ -240,6 +242,30 @@ services:
       - kafka
       - redis
       - postgres
+
+  comment-service:
+    image: devflow-v2/comment-service
+    restart: unless-stopped
+    env_file:
+      - path: ./services/comment-service/.env
+        required: false
+    environment:
+      PORT: 5003
+      MONGO_URI: mongodb://mongodb:27017/comment-service
+      REDIS_URL: redis://redis:6379
+      KAFKA_BROKERS: kafka:29092
+      JWT_SECRET: ${JWT_SECRET:-supersecretkeythatisverylongandsecurebecausejwtneedsit}
+    build:
+      context: ./services/comment-service
+      dockerfile: Dockerfile
+    ports:
+      - "5003:5003"
+    networks:
+      - devflow-net
+    depends_on:
+      - kafka
+      - redis
+      - mongodb
 
 networks:
   devflow-net:

@@ -15,6 +15,7 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 		"/api/questions": cfg.Services.QuestionServiceURL,
 		"/api/answers":   cfg.Services.AnswerServiceURL,
 		"/api/votes":     cfg.Services.VoteServiceURL,
+		"/api/comments":  cfg.Services.CommentServiceURL,
 	}
 
 	for prefix, targetURL := range routeMap {

@@ -5,6 +5,7 @@ import { initSocketServer } from './service/server.js';
 import { startKafkaConsumer, stopKafkaConsumer } from './kafka/kafka.js';
 import { pubClient, subClient } from './config/redis.js';
 import cors from 'cors';
+import healthRouter from './routes/health.js';
 import { register } from './metrics/metrics.js';
 import { traceStorage, logger } from './utils/logger.js';
 
