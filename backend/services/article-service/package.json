@@ -1,0 +1,38 @@
+{
+  "name": "article-service",
+  "version": "1.0.0",
+  "description": "It is the Article service of Devflow",
+  "license": "ISC",
+  "author": "Ramesh Das",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/app.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.14.0",
+    "bullmq": "^5.80.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-async-errors": "^3.1.1",
+    "groq-sdk": "^0.3.3",
+    "ioredis": "^5.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "kafkajs": "^2.2.4",
+    "node-cron": "^3.0.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.12.11",
+    "@types/node-cron": "^3.0.11",
+    "prisma": "^5.14.0",
+    "tsx": "^4.10.3",
+    "typescript": "^5.4.5"
+  }
+}
