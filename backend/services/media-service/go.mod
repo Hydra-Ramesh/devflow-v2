@@ -5,6 +5,7 @@ go 1.27.0
 require (
 	github.com/cloudinary/cloudinary-go/v2 v2.16.0
 	github.com/golang-jwt/jwt/v5 v5.3.1
+	github.com/joho/godotenv v1.5.1
 )
 
 require (
