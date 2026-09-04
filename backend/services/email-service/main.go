@@ -25,7 +25,7 @@ func main() {
 	// Setup HTTP server for metrics and health
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "5024" // default port for email-service
+		port = "5010" // default port for email-service
 	}
 
 	mux := http.NewServeMux()

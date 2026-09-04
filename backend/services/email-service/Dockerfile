@@ -23,6 +23,6 @@ WORKDIR /app
 COPY --from=builder /email /app/email
 RUN chmod +x /app/email
 
-EXPOSE 5018
+EXPOSE 5010
 
 ENTRYPOINT ["/app/email"]

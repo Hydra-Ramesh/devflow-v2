@@ -10,7 +10,7 @@ RUN npm ci --only=production
 
 COPY . .
 
-EXPOSE 5023
+EXPOSE 5009
 
 ENV NODE_ENV=production
 

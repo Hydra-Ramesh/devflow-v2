@@ -17,6 +17,8 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 		"/api/votes":         cfg.Services.VoteServiceURL,
 		"/api/comments":      cfg.Services.CommentServiceURL,
 		"/api/notifications": cfg.Services.NotificationServiceURL,
+		"/api/medias":        cfg.Services.MediaServiceURL,
+		"/api/upload":        cfg.Services.MediaServiceURL,
 	}
 
 	for prefix, targetURL := range routeMap {
@@ -36,8 +38,8 @@ func RegisterServiceRoutes(r *gin.Engine, cfg *config.Config) {
 	r.Any("/login/oauth2/*action", proxy.Handler(authTarget, "", ""))
 
 	notificationTarget := cfg.Services.NotificationServiceURL
-	r.Any("/socket.io/notifications", proxy.Handler(notificationTarget, "", ""))
-	r.Any("/socket.io/notifications/*action", proxy.Handler(notificationTarget, "", ""))
+	r.Any("/notifications-socket", proxy.Handler(notificationTarget, "", ""))
+	r.Any("/notifications-socket/*action", proxy.Handler(notificationTarget, "", ""))
 
 	realtimeTarget := cfg.Services.RealtimeServiceURL
 	r.Any("/socket.io/*action", proxy.Handler(realtimeTarget, "", ""))

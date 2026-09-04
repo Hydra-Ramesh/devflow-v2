@@ -34,6 +34,7 @@ type ServicesRoutes struct {
 	VoteServiceURL         string
 	CommentServiceURL      string
 	NotificationServiceURL string
+	MediaServiceURL        string
 }
 
 func LoadConfig() *Config {
@@ -63,13 +64,14 @@ func LoadConfig() *Config {
 		Services: ServicesRoutes{
 			AuthServiceURL:         getEnv("AUTH_SERVICE_URL", "http://localhost:5001"),
 			UserServiceURL:         getEnv("USER_SERVICE_URL", "http://localhost:5002"),
-			AuditServiceURL:        getEnv("AUDIT_SERVICE_URL", "http://localhost:5022"),
-			RealtimeServiceURL:     getEnv("REALTIME_SERVICE_URL", "http://localhost:5023"),
+			AuditServiceURL:        getEnv("AUDIT_SERVICE_URL", "http://localhost:5008"),
+			RealtimeServiceURL:     getEnv("REALTIME_SERVICE_URL", "http://localhost:5009"),
 			QuestionServiceURL:     getEnv("QUESTION_SERVICE_URL", "http://localhost:5005"),
 			AnswerServiceURL:       getEnv("ANSWER_SERVICE_URL", "http://localhost:5006"),
 			VoteServiceURL:         getEnv("VOTE_SERVICE_URL", "http://localhost:5007"),
 			CommentServiceURL:      getEnv("COMMENT_SERVICE_URL", "http://localhost:5003"),
 			NotificationServiceURL: getEnv("NOTIFICATION_SERVICE_URL", "http://localhost:5004"),
+			MediaServiceURL:        getEnv("MEDIA_SERVICE_URL", "http://localhost:5011"),
 		},
 	}
 }
@@ -98,3 +100,4 @@ func getEnvBool(key string, fallback bool) bool {
 	}
 	return fallback
 }
+

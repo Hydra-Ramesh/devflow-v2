@@ -15,7 +15,7 @@ async function bootstrap() {
 
   // 3. Start Express HTTP Server
   const app = createApp();
-  const PORT = parseInt(env.PORT, 10) || 5022;
+  const PORT = parseInt(env.PORT, 10) || 5008;
 
   const server = app.listen(PORT, () => {
     logger.info(` Audit Service running on port ${PORT}`);

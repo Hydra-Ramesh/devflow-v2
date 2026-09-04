@@ -55,13 +55,14 @@ services:
       REDIS_URL: redis://redis:6379
       AUTH_SERVICE_URL: http://auth-service:5001
       USER_SERVICE_URL: http://user-service:5002
-      AUDIT_SERVICE_URL: http://audit-service:5022
-      REALTIME_SERVICE_URL: http://realtime-service:5023
+      AUDIT_SERVICE_URL: http://audit-service:5008
+      REALTIME_SERVICE_URL: http://realtime-service:5009
       QUESTION_SERVICE_URL: http://question-service:5005
       ANSWER_SERVICE_URL: http://answer-service:5006
       VOTE_SERVICE_URL: http://vote-service:5007
       COMMENT_SERVICE_URL: http://comment-service:5003
       NOTIFICATION_SERVICE_URL: http://notification-service:5004
+      MEDIA_SERVICE_URL: http://media-service:5011
     build:
       context: ./services/gateway-service
       dockerfile: Dockerfile
@@ -137,7 +138,7 @@ services:
       - path: ./services/audit-service/.env
         required: false
     environment:
-      PORT: 5022
+      PORT: 5008
       MONGO_URI: mongodb://mongodb:27017/audit-service
       KAFKA_BROKERS: kafka:29092
       JWT_SECRET: ${JWT_SECRET:-supersecretkeythatisverylongandsecurebecausejwtneedsit}
@@ -145,7 +146,7 @@ services:
       context: ./services/audit-service
       dockerfile: Dockerfile
     ports:
-      - "5022:5022"
+      - "5008:5008"
     networks:
       - devflow-net
     depends_on:
@@ -159,7 +160,7 @@ services:
       - path: ./services/realtime-service/.env
         required: false
     environment:
-      PORT: 5023
+      PORT: 5009
       REDIS_URL: redis://redis:6379
       KAFKA_BROKER: kafka:29092
       JWT_SECRET: ${JWT_SECRET:-supersecretkeythatisverylongandsecurebecausejwtneedsit}
@@ -167,7 +168,7 @@ services:
       context: ./services/realtime-service
       dockerfile: Dockerfile
     ports:
-      - "5023:5023"
+      - "5009:5009"
     networks:
       - devflow-net
     depends_on:
@@ -300,21 +301,40 @@ services:
       - path: ./services/email-service/.env
         required: false
     environment:
-      PORT: 5024
+      PORT: 5010
       REDIS_URL: redis://redis:6379
       KAFKA_BROKERS: kafka:29092
     build:
       context: ./services/email-service
       dockerfile: Dockerfile
     ports:
-      - "5024:5024"
+      - "5010:5010"
     networks:
       - devflow-net
     depends_on:
       - kafka
       - redis
 
+  media-service:
+    image: devflow-v2/media-service
+    restart: unless-stopped
+    env_file:
+      - path: ./services/media-service/.env
+        required: false
+    environment:
+      PORT: 5011
+    build:
+      context: ./services/media-service
+      dockerfile: Dockerfile
+    ports:
+      - "5011:5011"
+    networks:
+      - devflow-net
+
 networks:
   devflow-net:
     driver: bridge
+
+
+
 

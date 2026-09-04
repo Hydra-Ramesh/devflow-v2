@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const env = {
-    PORT: process.env.PORT || '5022',
+    PORT: process.env.PORT || '5008',
     NODE_ENV: process.env.NODE_ENV || 'development',
     MONGO_URI: process.env.MONGO_URI || 'mongodb://localhost:27017/audit-service',
     KAFKA_BROKERS: process.env.KAFKA_BROKERS || process.env.KAFKA_BROKER || 'localhost:9092',

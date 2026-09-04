@@ -94,7 +94,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "3004"
+		port = "5011"
 	}
 
 	log.Printf("Starting media-service-v2 on port %s", port)

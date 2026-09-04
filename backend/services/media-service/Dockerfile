@@ -12,7 +12,7 @@ RUN go mod download || true
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build -ldflags="-w -s" -o /vote
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH:-amd64} go build -ldflags="-w -s" -o /media-bin
 
 FROM alpine:3.19
 
@@ -20,9 +20,9 @@ RUN apk --no-cache add ca-certificates tzdata
 
 WORKDIR /app
 
-COPY --from=builder /media /app/media
+COPY --from=builder /media-bin /app/media
 RUN chmod +x /app/media
 
-EXPOSE 5006
+EXPOSE 5011
 
 ENTRYPOINT ["/app/media"]
